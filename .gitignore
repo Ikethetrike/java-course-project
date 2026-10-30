@@ -1,0 +1,22 @@
+# Compiled Java bytecode
+*.class
+bin/
+target/
+
+# Eclipse project metadata and caches
+.metadata/
+.settings/
+.recommenders/
+
+# IntelliJ and VS Code configs
+.idea/
+*.iml
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Log files and temporary files
+*.log
+*.tmp
