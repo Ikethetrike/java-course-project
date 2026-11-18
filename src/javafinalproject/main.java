@@ -365,3 +365,111 @@ public class main {
 	        });
 	    }
 	}
+	import java.awt.*;
+
+	public class Player {
+	    private int row;
+	    private int col;
+	    private final int startRow;
+	    private final int startCol;
+	    
+	    // Direction vectors (defaults to facing DOWN)
+	    private int facingRow = 1;
+	    private int facingCol = 0;
+	    
+	    private int movesCount = 0;
+	    private int pushesCount = 0;
+
+	    public Player(int startRow, int startCol) {
+	        this.startRow = startRow;
+	        this.startCol = startCol;
+	        this.row = startRow;
+	        this.col = startCol;
+	    }
+
+	    /**
+	     * Moves the player by the specified delta and updates facing direction.
+	     */
+	    public void move(int dRow, int dCol, boolean pushedBlock) {
+	        this.row += dRow;
+	        this.col += dCol;
+	        this.facingRow = dRow;
+	        this.facingCol = dCol;
+	        this.movesCount++;
+	        
+	        if (pushedBlock) {
+	            this.pushesCount++;
+	        }
+	    }
+
+	    /**
+	     * Updates the direction the player is looking without moving (e.g., when bumping into a wall).
+	     */
+	    public void setFacing(int dRow, int dCol) {
+	        if (dRow != 0 || dCol != 0) {
+	            this.facingRow = dRow;
+	            this.facingCol = dCol;
+	        }
+	    }
+
+	    /**
+	     * Resets the player to their starting position for the current level.
+	     */
+	    public void reset() {
+	        this.row = startRow;
+	        this.col = startCol;
+	        this.facingRow = 1;
+	        this.facingCol = 0;
+	        this.movesCount = 0;
+	        this.pushesCount = 0;
+	    }
+
+	    /**
+	     * Renders the player on the grid with directional eyes.
+	     */
+	    public void draw(Graphics2D g2d, int tileSize) {
+	        int px = col * tileSize;
+	        int py = row * tileSize;
+
+	        // 1. Draw subtle drop shadow
+	        g2d.setColor(new Color(0, 0, 0, 80));
+	        g2d.fillOval(px + 8, py + 10, tileSize - 16, tileSize - 16);
+
+	        // 2. Draw Player Body
+	        g2d.setColor(new Color(139, 233, 253)); // Cyan body
+	        g2d.fillOval(px + 6, py + 6, tileSize - 12, tileSize - 12);
+
+	        // 3. Draw Body Outline
+	        g2d.setColor(new Color(40, 42, 54));
+	        g2d.setStroke(new BasicStroke(2f));
+	        g2d.drawOval(px + 6, py + 6, tileSize - 12, tileSize - 12);
+
+	        // 4. Draw Directional Eyes
+	        int centerX = px + tileSize / 2;
+	        int centerY = py + tileSize / 2;
+	        int eyeOffsetX = facingCol * 5;
+	        int eyeOffsetY = facingRow * 5;
+
+	        g2d.setColor(new Color(40, 42, 54));
+	        if (facingCol != 0) { 
+	            // Facing Left or Right: stack eyes vertically
+	            g2d.fillOval(centerX + eyeOffsetX - 3, centerY - 7, 6, 6);
+	            g2d.fillOval(centerX + eyeOffsetX - 3, centerY + 1, 6, 6);
+	        } else { 
+	            // Facing Up or Down: place eyes side-by-side
+	            g2d.fillOval(centerX - 8, centerY + eyeOffsetY - 3, 6, 6);
+	            g2d.fillOval(centerX + 2, centerY + eyeOffsetY - 3, 6, 6);
+	        }
+	    }
+
+	    // Getters and Setters
+	    public int getRow() { return row; }
+	    public int getCol() { return col; }
+	    public int getMovesCount() { return movesCount; }
+	    public int getPushesCount() { return pushesCount; }
+	    
+	    public void setPosition(int row, int col) {
+	        this.row = row;
+	        this.col = col;
+	    }
+	}
