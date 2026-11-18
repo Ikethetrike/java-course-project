@@ -36,8 +36,3 @@ public class main {
 			
 		}
 	}
-
-=0-o0=-o=
-[o-0o-0=90o=]poi-09-=9
-kidsfugopwreitpeoio9ufq0r9
-fqkjghri
