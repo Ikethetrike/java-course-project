@@ -1,3 +1,4 @@
+//Isaac
 package javafinalproject;
 
 //Base class for all objects that occupy a grid cell in the game
