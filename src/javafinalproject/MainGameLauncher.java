@@ -90,9 +90,10 @@ public class MainGameLauncher {
             playerStartPos = new Position(1, 1);
             boxPositions.add(new Position(5, 5));
         } else if (level == 2) {
-            playerStartPos = new Position(1, 1);
-            boxPositions.add(new Position(4, 4));
-            boxPositions.add(new Position(5, 5));
+            playerStartPos = new Position(4, 6);
+            boxPositions.add(new Position(5, 6));
+            boxPositions.add(new Position(6, 6));
+            boxPositions.add(new Position(7, 6));
         } else {
             playerStartPos = new Position(4, 7);
             boxPositions.add(new Position(5, 6));
