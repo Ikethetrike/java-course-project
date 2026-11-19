@@ -2,13 +2,16 @@ package javafinalproject;
 
 import java.util.List;
 
+//Coordinates player movement, entity interactions, and undo/redo history
 public class EntityManager {
     private Player player;
     private List<Entity> entities;
-    
+    private UndoRedoManager undoRedoManager;
+
     public EntityManager(Player player, List<Entity> entities) {
         this.player = player;
         this.entities = entities;
+        this.undoRedoManager = new UndoRedoManager();
     }
 
     public Player getPlayer() {
@@ -19,48 +22,53 @@ public class EntityManager {
         return entities;
     }
 
-    // Attempts to move the player in a given direction, handling box pushes
-    public boolean tryMovePlayer(Direction dir, BoardContract board) {
-        Position targetPos = player.getPosition().move(dir);
+    public UndoRedoManager getUndoRedoManager() {
+        return undoRedoManager;
+    }
 
-        // 1. Check if the target tile is a wall or unwalkable on the board
+    //Attempts to move the player one step in the given direction
+    public boolean tryMovePlayer(Direction dir, BoardContract board) {
+        Position fromPos = player.getPosition();
+        Position targetPos = fromPos.move(dir);
+
+        //Stops if the destination tile is out of bounds
         if (!board.isWalkable(targetPos)) {
             return false;
         }
 
-        // 2. Check if there is an entity at the target position
         Entity blockingEntity = getEntityAt(targetPos);
 
+        //If nothing is blocking the player, than they can move 
         if (blockingEntity == null) {
-            // Empty floor — just move the player
             player.setPosition(targetPos);
+            undoRedoManager.recordMove(
+                new UndoRedoManager.MoveRecord(fromPos, targetPos, null, null, null)
+            );
             return true;
         }
-
-        // 3. If there is a pushable box, try to push it
+        
+        //If destination tile has a pushable box, and nothing is blocking the box, move the player and box
         if (blockingEntity instanceof PushableBox box) {
+            Position boxFromPos = box.getPosition();
             Position boxTargetPos = targetPos.move(dir);
 
-            // Ensure the space behind the box is walkable and not occupied by another entity
             if (board.isWalkable(boxTargetPos) && getEntityAt(boxTargetPos) == null) {
                 box.setPosition(boxTargetPos);
                 player.setPosition(targetPos);
+                undoRedoManager.recordMove(
+                    new UndoRedoManager.MoveRecord(fromPos, targetPos, box, boxFromPos, boxTargetPos)
+                );
                 return true;
             }
-            return false; // Box is blocked
+            return false;
         }
 
-        // 4. Other blocking entities (like locked doors or keys) can be handled here
-        if (!blockingEntity.isBlocking()) {
-            // Non-blocking item (e.g. key pickup)
-            player.setPosition(targetPos);
-            entities.remove(blockingEntity);
-            return true;
-        }
-
+        
+        //A blocking entity prevents movement
         return false;
     }
 
+    //checks a specific grid spot and tells you if anything is occupying it
     public Entity getEntityAt(Position pos) {
         for (Entity e : entities) {
             if (e.getPosition().equals(pos)) {
