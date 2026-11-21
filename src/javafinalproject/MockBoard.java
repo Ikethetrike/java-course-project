@@ -1,25 +1,32 @@
+//Caleb
 package javafinalproject;
 
 import java.util.HashSet;
 import java.util.Set;
 
+//Creates the tile grid (0 = wall, 1 = walkable floor) and pressure plate positions 
 public class MockBoard implements BoardContract {
+	//2D grid layout
     private int[][] grid;
+    //Set the grid positions for pressure plates 
     private Set<Position> pressurePlates;
     private int levelNum;
 
+    //Loads the board layout and pressure plates for the specific level
     public MockBoard(int levelNum) {
         this.levelNum = levelNum;
         this.pressurePlates = new HashSet<>();
         loadLevel(levelNum);
     }
 
+    //Populates the 10x10 grid
     private void loadLevel(int level) {
         pressurePlates.clear();
 
         if (level == 1) {
-            // EASY: 10x10 grid. 0 = Wall, 1 = Floor. Easy obstacle in the middle.
+            //Level 1
             grid = new int[][] {
+            	
             	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
                 {0, 1, 0, 0, 1, 1, 0, 0, 1, 0},
@@ -37,24 +44,25 @@ public class MockBoard implements BoardContract {
             pressurePlates.add(new Position(8, 8));
 
         } else if (level == 2) {
-            // MEDIUM: Divided chambers with narrow doorways
+            //Level 2
             grid = new int[][] {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, // Doorway opening in middle column
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 0, 1, 1, 1, 1, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 1, 1, 0, 0}, 
+                {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+                {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+                {0, 0, 0, 1, 1, 1, 1, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
             };
-            pressurePlates.add(new Position(1, 8));
-            pressurePlates.add(new Position(8, 1));
+            pressurePlates.add(new Position(5, 7));
+            pressurePlates.add(new Position(6, 7));
+            pressurePlates.add(new Position(7, 7));
 
         } else {
-            // HARD: Dense maze with all 4 inner corners as targets
+            //Level 3
             grid = new int[][] {
             	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -68,7 +76,6 @@ public class MockBoard implements BoardContract {
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
                 
             };
-            // 4 corner target traps
             pressurePlates.add(new Position(4, 2));
             pressurePlates.add(new Position(5, 2));
             pressurePlates.add(new Position(5, 3));
@@ -86,10 +93,6 @@ public class MockBoard implements BoardContract {
         return grid[pos.getRow()][pos.getCol()] == 1;
     }
 
-    @Override
-    public boolean isExit(Position pos) {
-        return false;
-    }
 
     @Override
     public boolean isPressurePlate(Position pos) {
