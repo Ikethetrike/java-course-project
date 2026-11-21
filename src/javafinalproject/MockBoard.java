@@ -26,6 +26,7 @@ public class MockBoard implements BoardContract {
         if (level == 1) {
             //Level 1
             grid = new int[][] {
+            	
             	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
                 {0, 1, 0, 0, 1, 1, 0, 0, 1, 0},
